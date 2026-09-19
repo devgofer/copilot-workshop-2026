@@ -82,8 +82,15 @@ function renderTodos() {
   }
 
   const remainingTodos = todos.filter((todo) => !todo.completed).length;
+  const hasCompletedTodos = todos.some((todo) => todo.completed);
+
   remainingCount.textContent = `Remaining: ${remainingTodos}`;
-  clearCompletedButton.hidden = !todos.some((todo) => todo.completed);
+  clearCompletedButton.hidden = !hasCompletedTodos;
+  clearCompletedButton.disabled = !hasCompletedTodos;
+  clearCompletedButton.setAttribute(
+    "aria-label",
+    hasCompletedTodos ? "清除所有已完成的待辦事項" : "沒有已完成項目可清除"
+  );
 }
 
 // 建立單一待辦項目的 DOM 結構與操作事件。
@@ -146,6 +153,17 @@ form.addEventListener("submit", (event) => {
 });
 
 clearCompletedButton.addEventListener("click", () => {
+  const hasCompletedTodos = todos.some((todo) => todo.completed);
+
+  if (!hasCompletedTodos) {
+    return;
+  }
+
+  const confirmed = window.confirm("確定要刪除所有已完成的待辦事項嗎？");
+  if (!confirmed) {
+    return;
+  }
+
   todos = todos.filter((todo) => !todo.completed);
   saveTodos();
   renderTodos();

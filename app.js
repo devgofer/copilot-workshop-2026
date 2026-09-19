@@ -71,9 +71,18 @@ function renderTodos() {
   if (visibleTodos.length === 0) {
     const emptyState = document.createElement("p");
     emptyState.className = "empty-state";
-    emptyState.textContent = todos.length === 0
-      ? "目前還沒有待辦事項，先寫下第一件吧。"
-      : `目前沒有${currentFilter === "active" ? "進行中" : "已完成"}的事項。`;
+    emptyState.setAttribute("role", "status");
+    emptyState.setAttribute("aria-live", "polite");
+
+    if (todos.length === 0) {
+      emptyState.textContent = "目前還沒有待辦事項，先寫下第一件吧。";
+    } else if (currentFilter === "all") {
+      emptyState.textContent = "目前沒有待辦事項。";
+    } else {
+      const filterLabel = currentFilter === "active" ? "進行中" : "已完成";
+      emptyState.textContent = `目前沒有${filterLabel}的事項。這些項目仍然存在，但不符合目前篩選條件，可切回「全部」查看。`;
+    }
+
     list.append(emptyState);
   } else {
     visibleTodos.forEach((todo) => {

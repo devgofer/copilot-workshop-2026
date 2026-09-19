@@ -301,6 +301,12 @@ h1 {
   color: var(--color-accent-dark);
 }
 
+.clear-button:disabled {
+  color: var(--color-muted);
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
